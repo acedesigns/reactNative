@@ -7,108 +7,143 @@
  * =======================================================
  */
 
- import React from 'react';
+ import React, { useState, useEffect, useMemo, useReducer } from "react";
  import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
-   StyleSheet,
-   Text,
-   useColorScheme,
-   View,
- } from 'react-native';
+     StyleSheet,
+     Text,View,
+     Alert,
+     SafeAreaView
+ } from "react-native";
+import { AuthContext } from "./src/components/context";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
- import {
-   Colors,
-   DebugInstructions,
-   Header,
-   LearnMoreLinks,
-   ReloadInstructions,
- } from 'react-native/Libraries/NewAppScreen';
+const Drawer = createDrawerNavigator();
+const AppStack = createStackNavigator();
 
- const Section: React.FC<{
-   title: string;
- }> = ({children, title}) => {
-   const isDarkMode = useColorScheme() === 'dark';
-   return (
-     <View style={styles.sectionContainer}>
-       <Text
-         style={[
-           styles.sectionTitle,
-           {
-             color: isDarkMode ? Colors.white : Colors.black,
-           },
-         ]}>
-         {title}
-       </Text>
-       <Text
-         style={[
-           styles.sectionDescription,
-           {
-             color: isDarkMode ? Colors.light : Colors.dark,
-           },
-         ]}>
-         {children}
-       </Text>
-     </View>
-   );
- };
+import { LogInScreen, RegisterScreen, ForgotPasswordScreen } from "./src/screens/AuthScreens/";
 
  const App = () => {
-   const isDarkMode = useColorScheme() === 'dark';
 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
+     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean>(false);
 
-   return (
-     <SafeAreaView style={backgroundStyle}>
-       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-       <ScrollView
-         contentInsetAdjustmentBehavior="automatic"
-         style={backgroundStyle}>
-         <Header />
-         <View
-           style={{
-             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-           }}>
-           <Section title="Step One">
-             Edit <Text style={styles.highlight}>App.js</Text> to change this
-             screen and then come back to see your edits.
-           </Section>
-           <Section title="See Your Changes">
-             <ReloadInstructions />
-           </Section>
-           <Section title="Debug">
-             <DebugInstructions />
-           </Section>
-           <Section title="Learn More">
-             Read the docs to discover what to do next:
-           </Section>
-           <LearnMoreLinks />
-         </View>
-       </ScrollView>
-     </SafeAreaView>
-   );
+     const initialLoginState = {
+         isLoading: true,
+         userName: null,
+         userToken: null,
+     };
+
+     const loginReducer = (prevState, action) => {
+         switch( action.type ) {
+             case 'RETRIEVE_TOKEN':
+                 return {
+                     ...prevState,
+                     userToken: action.token,
+                     isLoading: false,
+                 };
+             case 'LOGIN':
+                 return {
+                     ...prevState,
+                     userName: action.id,
+                     userToken: action.token,
+                     isLoading: false,
+                 };
+             case 'LOGOUT':
+                 return {
+                     ...prevState,
+                     userName: null,
+                     userToken: null,
+                     isLoading: false,
+                 };
+             case 'REGISTER':
+                 return {
+                     ...prevState,
+                     userName: action.id,
+                     userToken: action.token,
+                     isLoading: false,
+                 };
+         }
+     };
+
+     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+
+     const authContext = useMemo(() => ({
+         signIn: async(foundUser) => {
+             const userToken = String(foundUser[0].userToken);
+             const userName = foundUser[0].username;
+
+             try {
+                 await AsyncStorage.setItem('userToken', userToken);
+             } catch(e) {
+                 console.log(e);
+             }
+             dispatch({ type: 'LOGIN', id: userName, token: userToken });
+         },
+         signOut: async() => {
+             try {
+                 await AsyncStorage.removeItem('userToken');
+             } catch(e) {
+                 console.log(e);
+             }
+             dispatch({ type: 'LOGOUT' });
+         },
+         signUp: () => {
+         },
+     }), []);
+
+
+     useEffect(() => {
+         setTimeout(async() => {
+             let userToken = null;
+             try {
+                 userToken = await AsyncStorage.getItem("userToken");
+             } catch(e) {
+                 Alert.alert("Could Not get userToken");
+             }
+             dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
+         }, 1000);
+     }, []);
+
+
+
+     if ( isFirstLaunch == null ) {
+         return null;
+     } else if ( isFirstLaunch !== true) {
+         return (
+             <SafeAreaView style={styles.container}>
+                 <AuthContext.Provider value={authContext}>
+                     <NavigationContainer>
+                         <AppStack.Navigator headerMode="none">
+                             <AppStack.Screen name="LogInScreen" component={LogInScreen} />
+                             <AppStack.Screen name="RegisterScreen" component={RegisterScreen} />
+                             <AppStack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
+                         </AppStack.Navigator>
+                     </NavigationContainer>
+                 </AuthContext.Provider>
+             </SafeAreaView>
+         )
+     } else {
+         return (
+             <SafeAreaView style={styles.container}>
+                 <View style={styles.textScreen}>
+                     <Text>Make A Splash Screen</Text>
+                 </View>
+             </SafeAreaView>
+         )
+     }
  };
 
  const styles = StyleSheet.create({
-   sectionContainer: {
-     marginTop: 32,
-     paddingHorizontal: 24,
-   },
-   sectionTitle: {
-     fontSize: 24,
-     fontWeight: '600',
-   },
-   sectionDescription: {
-     marginTop: 8,
-     fontSize: 18,
-     fontWeight: '400',
-   },
-   highlight: {
-     fontWeight: '700',
-   },
+     container: {
+		flex: 1,
+	 },
+     textScreen: {
+         flex: 1,
+         alignItems: "center",
+         justifyContent: "center"
+     }
  });
 
  export default App;
