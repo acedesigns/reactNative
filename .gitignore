@@ -62,6 +62,7 @@ buck-out/
 log.txt
 npm-debug.log*
 package-lock.json
+yarn.lock
 /.idea
 /.ionic
 /.sass-cache
