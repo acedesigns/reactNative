@@ -7,17 +7,25 @@
  * =======================================================
  */
 
-import React from "react";
-import { Alert, Text, View, StyleSheet, Button } from "react-native";
+import React, { useState, useContext } from "react";
+import { Alert, Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { AuthContext } from "../../components/context";
 
 const LogInScreen = ({navigation}) => {
+
+    const { logInMethod } = useContext(AuthContext);
 
     return(
         <View style={styles.container}>
 
-            <Text>Log In Screen</Text>
 
-            <Button title="Log in" onPress={() => {Alert.alert("Log in", "We will log you in")} }/>
+            <TouchableOpacity
+                onPress={() => { logInMethod() }}>
+
+                <Text>Sign In</Text>
+
+            </TouchableOpacity>
+
 
             <Button title="Forgot My Password" onPress={() => {navigation.navigate("ForgotPasswordScreen")} }/>
 
