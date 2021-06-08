@@ -63,18 +63,15 @@ import DrawerStackNavigator from "./src/navigators/appDrawerNavigator"
      }
      return (
 
-             <AuthContext.Provider value={authContext}>
-                 <NavigationContainer>
-                     { userToken !== null ?
-                         ( <DrawerStackNavigator /> )
-                         :  <AuthStackNavigator />
-                     }
-
-                 </NavigationContainer>
-             </AuthContext.Provider>
-
+         <AuthContext.Provider value={authContext}>
+             <NavigationContainer>
+                 { userToken !== null ?
+                     ( <DrawerStackNavigator /> )
+                     :  <AuthStackNavigator />
+                 }
+             </NavigationContainer>
+         </AuthContext.Provider>
      )
-
  };
 
  const styles = StyleSheet.create({
