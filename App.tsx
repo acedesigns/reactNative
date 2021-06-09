@@ -7,19 +7,12 @@
  * =======================================================
  */
 
- import React, { useState, useEffect, useMemo, useReducer } from "react";
- import {
-     Text,
-     View,
-     Alert,
-     StyleSheet,
-     SafeAreaView,
-     ActivityIndicator
- } from "react-native";
 import { AuthContext } from "./src/components/context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useEffect, useMemo, useReducer } from "react";
 
 
 const AppStack = createStackNavigator();
@@ -51,7 +44,7 @@ import DrawerStackNavigator from "./src/navigators/appDrawerNavigator"
      useEffect(() => {
          setTimeout(() => {
              setIsLoading(false);
-         }, 1500)
+         }, 5000)
      }, []);
 
      if (isLoading) {
