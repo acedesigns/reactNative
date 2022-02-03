@@ -15,10 +15,12 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 
 const Tab = createMaterialBottomTabNavigator();
 
-import homeStackNavigator from "./appBottomStacks/homeStackNavigator";
-import FeedStackNavigator from "./appBottomStacks/FeedStackNavigator";
-import profileStackNavigator from "./appBottomStacks/profileStackNavigator";
-import NotificationStackNavigator from "./appBottomStacks/notificationStackNavigator";
+import {
+  homeStackNavigator,
+  FeedStackNavigator,
+  profileStackNavigator,
+  NotificationStackNavigator,
+} from './appBottomStacks';
 
 
 const bottomTabNavigator = () => (
