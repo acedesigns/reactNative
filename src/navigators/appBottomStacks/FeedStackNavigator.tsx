@@ -7,34 +7,38 @@
  * =======================================================
  */
 
-import React from "react";
-import Icon from "react-native-vector-icons/Ionicons";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {createStackNavigator} from '@react-navigation/stack';
 
 const FeedStack = createStackNavigator();
 
-import { FeedScreen } from "../../screens/appScreens";
-
+import {FeedScreen} from '../../screens/appScreens';
 
 const FeedStackNavigator = ({navigation}) => (
-    <FeedStack.Navigator
-        screenOptions={{
-            headerStyle: {
-                backgroundColor: "#71AD43"
-            },
-            headerTintColor: "#fff"
+  <FeedStack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: '#71AD43',
+      },
+      headerTintColor: '#fff',
     }}>
-        <FeedStack.Screen
-            name="FeedScreen"
-            options={{
-                title:'Feed',
-                headerLeft: () => (
-                    <Icon.Button name="ios-menu" size={25} backgroundColor="#71AD43" onPress={() => navigation.openDrawer()}></Icon.Button>
-                )
-            }}
-            component={FeedScreen} />
-    </FeedStack.Navigator>
+    <FeedStack.Screen
+      name="FeedScreen"
+      options={{
+        title: 'Feed',
+        headerLeft: () => (
+          <Icon.Button
+            name="ios-menu"
+            size={25}
+            backgroundColor="#71AD43"
+            onPress={() => navigation.openDrawer()}
+          />
+        ),
+      }}
+      component={FeedScreen}
+    />
+  </FeedStack.Navigator>
 );
-
 
 export default FeedStackNavigator;
