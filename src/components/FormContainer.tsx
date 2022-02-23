@@ -1,0 +1,36 @@
+/* =======================================================
+ *
+ * Created by anele on 2022/02/09.
+ *
+ * @anele_ace
+ *
+ * =======================================================
+ */
+
+import React from 'react';
+import {
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+
+const FormContainer = ({children}: any) => {
+  return (
+    <KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      style={styles.container}>
+      {children}
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: Dimensions.get('window').width,
+    paddingHorizontal: 20,
+  },
+});
+
+export default FormContainer;

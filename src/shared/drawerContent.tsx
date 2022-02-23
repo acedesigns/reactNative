@@ -18,8 +18,8 @@ import {
   Paragraph,
   TouchableRipple,
 } from 'react-native-paper';
-import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
 import {AuthContext} from '../components/context';
+import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export function DrawerContent(props) {
